@@ -1,6 +1,22 @@
 import { Request, Response } from 'express';
+import { analyzeHandler } from '../handlers';
 
 export const analyzeController = async (req: Request, res: Response) => {
-  console.log(req, res);
-  res.json({ message: 'heeyyyyeee ANALYZEEEEE hereeee 1234545346256dgasdfghasdf!!! ' });
+  try {
+    const { text } = req.body;
+
+    console.log('analyzeController, text: ', text);
+
+    if (!text || typeof text !== 'string') {
+      return res.status(400).json({ error: 'Text is required in the request body.' });
+    }
+
+    const result = analyzeHandler(text);
+
+    res.json({
+      result,
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: 'Sentiment analysis failed.', details: error.message });
+  }
 };

@@ -10,8 +10,8 @@ import mongoose from 'mongoose';
 
 require('dotenv').config();
 
-const mongoDBUri = process.env.MONGO_DB_URI
-const databaseName = process.env.MONGO_DB_DATABASE_NAME
+const mongoDBUri = process.env.MONGO_DB_URI;
+const databaseName = process.env.MONGO_DB_DATABASE_NAME;
 
 mongoose.connect(`${mongoDBUri}/${databaseName}`);
 

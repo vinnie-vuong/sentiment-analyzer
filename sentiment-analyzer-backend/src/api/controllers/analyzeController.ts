@@ -11,7 +11,7 @@ export const analyzeController = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Text is required in the request body.' });
     }
 
-    const result = analyzeHandler(text);
+    const result = await analyzeHandler(text);
 
     res.json(result);
   } catch (error: any) {

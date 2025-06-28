@@ -1,12 +1,13 @@
 import natural from 'natural';
 import { SentimentResponse, ISentiment } from '../../interfaces/Reviews.types';
+import Analysis from '../../models/analysisModel';
 
 /**
  * Analyzes the sentiment of the given text.
  * @param text The text to analyze.
  * @returns The sentiment score.
  */
-export const analyzeHandler = (text: string): SentimentResponse => {
+export const analyzeHandler = async (text: string): Promise<SentimentResponse> => {
   const Analyzer = natural.SentimentAnalyzer;
   const stemmer = natural.PorterStemmer;
   const analyzer = new Analyzer('English', stemmer, 'afinn');
@@ -48,6 +49,20 @@ export const analyzeHandler = (text: string): SentimentResponse => {
   let positiveScore = Math.max(0, score);
   let negativeScore = Math.max(0, -score);
   let neutralScore = Math.max(0.1, 1 - Math.abs(score));
+
+  const analysis = new Analysis({
+    text,
+    label,
+    confidence,
+    score: {
+      positiveScore,
+      negativeScore,
+      neutralScore,
+    },
+  });
+
+  await analysis.save();
+
   return {
     text,
     score,

@@ -13,9 +13,7 @@ export const analyzeController = async (req: Request, res: Response) => {
 
     const result = analyzeHandler(text);
 
-    res.json({
-      result,
-    });
+    res.json(result);
   } catch (error: any) {
     res.status(500).json({ error: 'Sentiment analysis failed.', details: error.message });
   }

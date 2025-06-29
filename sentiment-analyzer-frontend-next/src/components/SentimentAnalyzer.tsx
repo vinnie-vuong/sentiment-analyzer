@@ -28,6 +28,7 @@ export default function SentimentAnalyzer({
     try {
       const analysis = await analyzeSentiment(text);
       setResult(analysis);
+      setText("");
       if (onAnalysisComplete) {
         onAnalysisComplete();
       }

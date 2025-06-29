@@ -46,9 +46,22 @@ export const analyzeHandler = async (text: string): Promise<SentimentResponse> =
     confidence = 0.7 + (1 - Math.abs(score) / 0.2) * 0.1; // 0.8 when score is 0, 0.7 at edges
     confidence = Math.min(confidence, 0.8);
   }
-  let positiveScore = Math.max(0, score);
-  let negativeScore = Math.max(0, -score);
-  let neutralScore = Math.max(0.1, 1 - Math.abs(score));
+
+  // Normalize scores to be between 0 and 1
+  // Use sigmoid function to normalize the raw score
+  const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
+
+  let positiveScore = score > 0 ? sigmoid(score) : 0;
+  let negativeScore = score < 0 ? sigmoid(-score) : 0;
+  let neutralScore = Math.abs(score) < 0.2 ? 1 - Math.abs(score) / 0.2 : 0;
+
+  // Ensure scores sum to approximately 1
+  const total = positiveScore + negativeScore + neutralScore;
+  if (total > 0) {
+    positiveScore = positiveScore / total;
+    negativeScore = negativeScore / total;
+    neutralScore = neutralScore / total;
+  }
 
   const analysis = new Analysis({
     text,
@@ -66,7 +79,7 @@ export const analyzeHandler = async (text: string): Promise<SentimentResponse> =
   return {
     text,
     score,
-    label, 
+    label,
     confidence: Math.round(confidence * 100) / 100,
     scores: {
       positiveScore,

@@ -3,6 +3,6 @@ import { reviewsController } from './controllers';
 
 const router = express.Router();
 
-router.get<{}, any>('/', reviewsController);
+router.get('/', reviewsController);
 
 export default router;

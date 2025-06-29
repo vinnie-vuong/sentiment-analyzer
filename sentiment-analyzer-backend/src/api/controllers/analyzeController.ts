@@ -14,7 +14,8 @@ export const analyzeController = async (req: Request, res: Response) => {
     const result = await analyzeHandler(text);
 
     res.json(result);
-  } catch (error: any) {
-    res.status(500).json({ error: 'Sentiment analysis failed.', details: error.message });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    res.status(500).json({ error: 'Sentiment analysis failed.', details: message });
   }
 };

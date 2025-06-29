@@ -5,9 +5,9 @@ export interface IAnalysis extends Document {
   label: 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
   confidence: number;
   score: {
-    positive: number;
-    negative: number;
-    neutral: number;
+    positiveScore: number;
+    negativeScore: number;
+    neutralScore: number;
   };
   createdAt: Date;
 }

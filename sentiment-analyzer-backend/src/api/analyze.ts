@@ -3,6 +3,6 @@ import { analyzeController } from './controllers';
 
 const router = express.Router();
 
-router.post<{}, any>('/', analyzeController);
+router.post('/', analyzeController);
 
 export default router;

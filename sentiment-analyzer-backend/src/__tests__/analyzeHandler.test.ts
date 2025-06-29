@@ -2,6 +2,11 @@ import { analyzeHandler } from '../api/handlers/analyzeHandler';
 import Analysis from '../models/analysisModel';
 
 describe('analyzeHandler', () => {
+  beforeEach(async () => {
+    // Clear database before each test to prevent test data pollution
+    await Analysis.deleteMany({});
+  });
+
   describe('Sentiment Analysis Logic', () => {
     test('Test Case 1: Positive Review - should return POSITIVE sentiment with high confidence', async () => {
       const testText = 'Amazing pizza! Great service and fast delivery. Highly recommend!';
@@ -165,7 +170,6 @@ describe('analyzeHandler', () => {
 
       // Check if saved to database
       const savedAnalysis = await Analysis.findOne({ text: testText });
-      console.log('savedAnalysis: ', savedAnalysis)
       expect(savedAnalysis).toBeTruthy();
       expect(savedAnalysis?.text).toBe(testText);
       expect(savedAnalysis?.label).toBe(result.label);
@@ -176,13 +180,21 @@ describe('analyzeHandler', () => {
     });
 
     test('should handle duplicate text analysis', async () => {
-      const testText = 'Duplicate text test';
+      const testText = 'Duplicate text test for handler test';
 
       // First analysis
-      await analyzeHandler(testText);
+      const result1 = await analyzeHandler(testText);
+      expect(result1).toHaveProperty('text', testText);
+      expect(result1).toHaveProperty('label');
+      expect(result1).toHaveProperty('confidence');
+      expect(result1).toHaveProperty('score');
 
       // Second analysis with same text
-      await analyzeHandler(testText);
+      const result2 = await analyzeHandler(testText);
+      expect(result2).toHaveProperty('text', testText);
+      expect(result2).toHaveProperty('label');
+      expect(result2).toHaveProperty('confidence');
+      expect(result2).toHaveProperty('score');
 
       // Should have two entries in database
       const analyses = await Analysis.find({ text: testText });

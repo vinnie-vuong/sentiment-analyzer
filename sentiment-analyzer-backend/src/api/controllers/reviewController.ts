@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { getReviewsHandler } from '../handlers/getReviewsHandler';
+import { ErrorFactory } from '../../interfaces/ErrorResponse';
 
-export const reviewsController = async (req: Request, res: Response) => {
+export const reviewsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
@@ -9,7 +10,7 @@ export const reviewsController = async (req: Request, res: Response) => {
     const result = await getReviewsHandler(page, limit);
     res.json(result);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    res.status(500).json({ error: 'Failed to fetch reviews.', details: message });
+    const apiError = ErrorFactory.database('Failed to fetch reviews');
+    next(apiError);
   }
 };

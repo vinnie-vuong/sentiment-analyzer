@@ -107,7 +107,7 @@ describe('API Endpoints', () => {
           .send({})
           .expect(400);
 
-        expect(response.body).toHaveProperty('error', 'Text is required in the request body.');
+        expect(response.body).toHaveProperty('error', 'Request body is required and cannot be empty.');
       });
 
       test('should return 400 for empty text', async () => {
@@ -116,7 +116,7 @@ describe('API Endpoints', () => {
           .send({ text: '' })
           .expect(400);
 
-        expect(response.body).toHaveProperty('error', 'Text is required in the request body.');
+        expect(response.body).toHaveProperty('error', 'Text cannot be empty or contain only whitespace.');
       });
 
       test('should return 400 for non-string text', async () => {
@@ -125,7 +125,7 @@ describe('API Endpoints', () => {
           .send({ text: 123 })
           .expect(400);
 
-        expect(response.body).toHaveProperty('error', 'Text is required in the request body.');
+        expect(response.body).toHaveProperty('error', 'Text must be a string.');
       });
 
       test('should return 400 for null text', async () => {
@@ -134,7 +134,45 @@ describe('API Endpoints', () => {
           .send({ text: null })
           .expect(400);
 
-        expect(response.body).toHaveProperty('error', 'Text is required in the request body.');
+        expect(response.body).toHaveProperty('error', 'Text field is required in the request body.');
+      });
+
+      test('should return 400 for empty request body', async () => {
+        const response = await request(app)
+          .post('/api/analyze')
+          .send({})
+          .expect(400);
+
+        expect(response.body).toHaveProperty('error', 'Request body is required and cannot be empty.');
+      });
+
+      test('should return 400 for completely empty request body', async () => {
+        const response = await request(app)
+          .post('/api/analyze')
+          .send()
+          .expect(400);
+
+        expect(response.body).toHaveProperty('error', 'Request body is required and cannot be empty.');
+      });
+
+      test('should return 400 for text with only whitespace', async () => {
+        const response = await request(app)
+          .post('/api/analyze')
+          .send({ text: '   ' })
+          .expect(400);
+
+        expect(response.body).toHaveProperty('error', 'Text cannot be empty or contain only whitespace.');
+      });
+
+      test('should return 400 for text exceeding 500 characters', async () => {
+        const testText = 'a'.repeat(501);
+
+        const response = await request(app)
+          .post('/api/analyze')
+          .send({ text: testText })
+          .expect(400);
+
+        expect(response.body).toHaveProperty('error', 'Text cannot exceed 500 characters.');
       });
     });
 
@@ -158,7 +196,7 @@ describe('API Endpoints', () => {
       });
 
       test('should handle duplicate text analysis', async () => {
-        const testText = 'Duplicate text test';
+        const testText = 'Duplicate text test for API test';
 
         // First analysis
         await request(app)
@@ -181,6 +219,9 @@ describe('API Endpoints', () => {
 
   describe('GET /api/reviews', () => {
     beforeEach(async () => {
+      // Clear any existing data first
+      await Analysis.deleteMany({});
+
       // Create test data
       const testAnalyses = [
         {

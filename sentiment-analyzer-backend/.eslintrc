@@ -9,8 +9,7 @@
   "parserOptions": {
     "project": "tsconfig.json",
     "ecmaVersion": 2021,
-    "sourceType": "module",
-    "tsconfigRootDir": "."
+    "sourceType": "module"
   },
   "extends": [
     "airbnb-typescript/base"
@@ -48,7 +47,7 @@
     "import/resolver": {
       "typescript": {
         "alwaysTryTypes": true,
-        "project": "tsconfig.json"
+        "project": "./tsconfig.json"
       }
     }
   },

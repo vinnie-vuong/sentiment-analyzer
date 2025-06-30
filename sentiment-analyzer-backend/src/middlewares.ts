@@ -15,7 +15,7 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
     res.status(apiError.statusCode);
     res.json({
       message: apiError.message,
-      stack: process.env.NODE_ENV === 'production' ? '🥞' : apiError.stack,
+      stack: apiError.stack,
     });
   } else {
     // Default error handling
@@ -23,7 +23,7 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
     res.status(statusCode);
     res.json({
       message: err.message,
-      stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
+      stack: err.stack,
     });
   }
 }

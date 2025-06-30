@@ -1,6 +1,6 @@
 # Sentiment Analyzer
 
-A full-stack sentiment analysis application built with Express.js, Next.js, MongoDB, and Docker. The application analyzes text sentiment using the AFINN lexicon and provides a beautiful, modern interface for real-time sentiment analysis.
+A full-stack sentiment analysis application built with Express.js, Next.js, and MongoDB. The application analyzes text sentiment using the AFINN lexicon and provides a beautiful, modern interface for real-time sentiment analysis.
 
 ## 🚀 Features
 
@@ -10,7 +10,6 @@ A full-stack sentiment analysis application built with Express.js, Next.js, Mong
 - **Visual Feedback**: Progress bars and color-coded sentiment indicators
 - **Error Handling**: Comprehensive error handling and user feedback
 - **TypeScript**: Full type safety throughout the application
-- **Docker Support**: Complete containerization with Docker Compose
 - **Testing**: Comprehensive test suite with 80%+ coverage
 - **API Documentation**: Well-documented REST API endpoints
 
@@ -20,9 +19,6 @@ A full-stack sentiment analysis application built with Express.js, Next.js, Mong
 My_Sentiment_Analyzer/
 ├── sentiment-analyzer-backend/     # Express.js + TypeScript + MongoDB
 ├── sentiment-analyzer-frontend-next/ # Next.js + TypeScript + Tailwind CSS
-├── scripts/                        # MongoDB initialization scripts
-├── docker-compose.yml             # Docker orchestration
-├── docker-setup.sh               # Docker deployment script
 ├── setup.sh                      # Development setup script
 └── README.md                     # This file
 ```
@@ -44,48 +40,27 @@ My_Sentiment_Analyzer/
 - **Lucide React** for icons
 - **Axios** for API communication
 
-### DevOps
-- **Docker** for containerization
-- **Docker Compose** for orchestration
-- **MongoDB 7.0** for database
-- **Health checks** for all services
-
 ## 🚀 Quick Start
 
-### Option 1: Docker (Recommended)
+### Prerequisites
 
-The easiest way to get started is using Docker:
+- **Node.js 18+** - [Download here](https://nodejs.org/)
+- **npm** - Comes with Node.js
+- **MongoDB** - [Installation guide](https://docs.mongodb.com/manual/installation/)
 
-```bash
-# Clone the repository
-git clone <repository-url>
-cd My_Sentiment_Analyzer
+### Automated Setup
 
-# Run the Docker setup script
-./docker-setup.sh
-```
-
-This will:
-- Build and start all services (MongoDB, Backend, Frontend)
-- Set up the database with proper schemas and indexes
-- Wait for all services to be ready
-- Display access URLs
-
-**Access URLs:**
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5007
-- MongoDB: localhost:27017
-
-### Option 2: Development Setup
-
-For development without Docker:
+The easiest way to get started:
 
 ```bash
 # Clone the repository
 git clone <repository-url>
 cd My_Sentiment_Analyzer
 
-# Run the development setup script
+# Make the setup script executable
+chmod +x setup.sh
+
+# Run the setup script
 ./setup.sh
 ```
 
@@ -96,18 +71,39 @@ This will:
 - Run tests
 - Provide next steps
 
-**Manual Setup:**
+### Manual Setup
+
+If you prefer to set up manually:
+
 ```bash
-# Backend
+# 1. Install MongoDB
+# On macOS with Homebrew:
+brew tap mongodb/brew
+brew install mongodb-community
+brew services start mongodb-community
+
+# 2. Setup Backend
 cd sentiment-analyzer-backend
 npm install
+./setup-env.sh
+
+# 3. Setup Frontend
+cd ../sentiment-analyzer-frontend-next
+npm install
+./setup-env.sh
+
+# 4. Start Backend (Terminal 1)
+cd ../sentiment-analyzer-backend
 npm run dev
 
-# Frontend (new terminal)
-cd sentiment-analyzer-frontend-next
-npm install
+# 5. Start Frontend (Terminal 2)
+cd ../sentiment-analyzer-frontend-next
 npm run dev
 ```
+
+**Access URLs:**
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5007
 
 ## 📁 Project Structure
 
@@ -149,16 +145,16 @@ src/
 ```env
 NODE_ENV=development
 PORT=5007
-MONGODB_URI=mongodb://localhost:27017/sentiment_analyzer
+MONGO_DB_URI=mongodb://localhost:27017
+TEST_MONGO_URI=mongodb://localhost:27017
+MONGO_DB_TEST_DATABASE_NAME=sentiment_analyzer_test
+MONGO_DB_DATABASE_NAME=sentiment-analyzer
 ```
 
 #### Frontend (`.env.local`)
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:5007
 ```
-
-#### Docker (docker-compose.yml)
-All environment variables are configured in the Docker Compose file.
 
 ## 🧪 Testing
 
@@ -179,28 +175,6 @@ The backend includes comprehensive tests covering:
 - Sentiment analysis logic
 
 **Coverage Target:** 80%+
-
-## 🐳 Docker Commands
-
-```bash
-# Start all services
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-
-# Stop and remove data
-docker-compose down --volumes
-
-# Rebuild and start
-docker-compose up --build -d
-
-# View service status
-docker-compose ps
-```
 
 ## 📚 API Documentation
 
@@ -257,24 +231,38 @@ The application uses the AFINN lexicon for sentiment analysis:
 
 The confidence score is calculated based on the strength and distribution of sentiment words in the text.
 
-## 🚀 Deployment
+## 🚀 Development Commands
 
-### Docker Deployment
-The application is ready for production deployment using Docker:
-
+### Backend
 ```bash
-# Build and deploy
-./docker-setup.sh
-
-# Or manually
-docker-compose -f docker-compose.yml up -d
+cd sentiment-analyzer-backend
+npm run dev          # Start development server
+npm test             # Run tests
+npm run test:watch   # Run tests in watch mode
+npm run lint         # Run ESLint
+npm run build        # Build for production
 ```
 
-### Manual Deployment
+### Frontend
+```bash
+cd sentiment-analyzer-frontend-next
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+```
+
+## 🚀 Deployment
+
+### Backend Deployment
 1. Set up MongoDB on your server
-2. Deploy the backend to your server
-3. Deploy the frontend to a static hosting service (Vercel, Netlify, etc.)
-4. Update environment variables for production
+2. Deploy the backend to your server (Heroku, Vercel, AWS, etc.)
+3. Update environment variables for production
+
+### Frontend Deployment
+1. Build the frontend: `npm run build`
+2. Deploy to a static hosting service (Vercel, Netlify, etc.)
+3. Update the `NEXT_PUBLIC_API_BASE_URL` environment variable
 
 ## 🤝 Contributing
 
@@ -292,27 +280,31 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Common Issues
 
-**Docker Issues:**
-- Make sure Docker and Docker Compose are installed
-- Check if ports 3000, 5007, and 27017 are available
-- Use `docker-compose logs` to view error messages
+**MongoDB Issues:**
+- Make sure MongoDB is installed and running
+- Check if port 27017 is available
+- Verify the connection string in `.env`
 
-**Development Issues:**
+**Node.js Issues:**
 - Ensure Node.js 18+ is installed
-- Check if MongoDB is running locally
-- Verify environment variables are set correctly
+- Check if npm is working correctly
+- Clear npm cache: `npm cache clean --force`
 
 **API Connection Issues:**
 - Check if the backend is running on port 5007
 - Verify the `NEXT_PUBLIC_API_BASE_URL` environment variable
 - Check CORS settings if accessing from different domains
 
+**Port Conflicts:**
+- Check if ports 3000 and 5007 are available
+- Kill existing processes: `lsof -ti:3000 | xargs kill -9`
+
 ## 📞 Support
 
 If you encounter any issues or have questions:
 
 1. Check the troubleshooting section above
-2. Review the logs: `docker-compose logs -f`
+2. Review the logs in your terminal
 3. Run the tests: `npm test`
 4. Open an issue on GitHub
 

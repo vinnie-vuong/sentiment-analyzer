@@ -13,11 +13,7 @@ Create a `.env` file in the backend root directory:
 
 ```bash
 # Run this command in the sentiment-analyzer-backend directory
-cat > .env << EOF
-PORT=5007
-MONGO_DB_URI=mongodb://localhost:27017
-MONGO_DB_DATABASE_NAME=sentiment_analyzer
-EOF
+./setup-env.sh
 ```
 
 ### 2. Install Dependencies

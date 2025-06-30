@@ -38,11 +38,7 @@ cd sentiment-analyzer-backend
 npm install
 
 # Create environment file
-cat > .env << EOF
-PORT=5007
-MONGO_DB_URI=mongodb://localhost:27017
-MONGO_DB_DATABASE_NAME=sentiment_analyzer
-EOF
+.setup-env.sh
 
 # Start the server
 npm run dev
@@ -178,6 +174,8 @@ npm run typecheck    # TypeScript type checking
 PORT=5007                                    # Server port
 MONGO_DB_URI=mongodb://localhost:27017      # MongoDB connection
 MONGO_DB_DATABASE_NAME=sentiment_analyzer   # Database name
+TEST_MONGO_URI=mongodb://localhost:27017
+MONGO_DB_TEST_DATABASE_NAME=sentiment_analyzer_test # Database test name
 ```
 
 ## Sentiment Analysis Logic
@@ -230,28 +228,6 @@ interface IAnalysis {
 - **CORS**: Configured for cross-origin requests
 - **Helmet**: Security headers enabled
 - **Rate Limiting**: Ready for implementation
-
-## Deployment
-
-### Docker (Optional)
-
-```bash
-# Build image
-docker build -t sentiment-analyzer-backend .
-
-# Run container
-docker run -p 5007:5007 sentiment-analyzer-backend
-```
-
-### Environment Setup
-
-```bash
-# Production environment
-NODE_ENV=production
-PORT=5007
-MONGO_DB_URI=mongodb://your-mongodb-uri
-MONGO_DB_DATABASE_NAME=sentiment_analyzer_prod
-```
 
 ## Contributing
 

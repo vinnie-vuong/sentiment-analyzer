@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Sentiment Analyzer Development Setup Script
-# This script sets up the development environment without Docker
+# This script sets up the development environment
 
 set -e  # Exit on any error
 
@@ -60,8 +60,9 @@ check_npm() {
 check_mongodb() {
     print_status "Checking MongoDB installation..."
     if ! command -v mongod &> /dev/null; then
-        print_warning "MongoDB is not installed. Please install MongoDB or use Docker."
+        print_warning "MongoDB is not installed. Please install MongoDB."
         print_warning "You can install MongoDB from: https://docs.mongodb.com/manual/installation/"
+        print_warning "On macOS with Homebrew: brew tap mongodb/brew && brew install mongodb-community"
         return 1
     fi
     
@@ -91,7 +92,10 @@ setup_backend() {
         cat > .env << EOF
 NODE_ENV=development
 PORT=5007
-MONGODB_URI=mongodb://localhost:27017/sentiment_analyzer
+MONGO_DB_URI=mongodb://localhost:27017
+MONGO_DB_DATABASE_NAME=sentiment-analyzer
+TEST_MONGO_URI=mongodb://localhost:27017
+MONGO_DB_TEST_DATABASE_NAME=sentiment_analyzer_test
 EOF
         print_success "Backend environment file created"
     fi
@@ -153,8 +157,11 @@ show_instructions() {
     echo "   Frontend: http://localhost:3000"
     echo "   Backend API: http://localhost:5007"
     echo ""
-    echo -e "${YELLOW}Alternative: Use Docker setup${NC}"
-    echo "   ./docker-setup.sh"
+    echo -e "${YELLOW}Useful commands:${NC}"
+    echo "   Backend tests: cd sentiment-analyzer-backend && npm test"
+    echo "   Frontend build: cd sentiment-analyzer-frontend-next && npm run build"
+    echo "   Lint backend: cd sentiment-analyzer-backend && npm run lint"
+    echo "   Lint frontend: cd sentiment-analyzer-frontend-next && npm run lint"
 }
 
 # Main execution

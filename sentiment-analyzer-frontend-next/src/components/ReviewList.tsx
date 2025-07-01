@@ -130,7 +130,7 @@ const ReviewList = forwardRef<ReviewListRef>((props, ref) => {
                             }}
                           />
                         </div>
-                        <span className="text-sm font-medium w-12">
+                        <span className="text-sm font-semibold text-gray-900 w-12">
                           {(review.score.positiveScore * 100).toFixed(1)}%
                         </span>
                       </div>
@@ -146,7 +146,7 @@ const ReviewList = forwardRef<ReviewListRef>((props, ref) => {
                             }}
                           />
                         </div>
-                        <span className="text-sm font-medium w-12">
+                        <span className="text-sm font-semibold text-gray-900 w-12">
                           {(review.score.negativeScore * 100).toFixed(1)}%
                         </span>
                       </div>
@@ -162,7 +162,7 @@ const ReviewList = forwardRef<ReviewListRef>((props, ref) => {
                             }}
                           />
                         </div>
-                        <span className="text-sm font-medium w-12">
+                        <span className="text-sm font-semibold text-gray-900 w-12">
                           {(review.score.neutralScore * 100).toFixed(1)}%
                         </span>
                       </div>

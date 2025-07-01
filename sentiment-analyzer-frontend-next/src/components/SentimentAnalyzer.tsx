@@ -130,7 +130,7 @@ export default function SentimentAnalyzer({
                           }}
                         />
                       </div>
-                      <span className="text-sm font-medium">
+                      <span className="text-sm font-semibold text-gray-900">
                         {(result.scores.positiveScore * 100).toFixed(1)}%
                       </span>
                     </div>
@@ -146,7 +146,7 @@ export default function SentimentAnalyzer({
                           }}
                         />
                       </div>
-                      <span className="text-sm font-medium">
+                      <span className="text-sm font-semibold text-gray-900">
                         {(result.scores.negativeScore * 100).toFixed(1)}%
                       </span>
                     </div>
@@ -162,7 +162,7 @@ export default function SentimentAnalyzer({
                           }}
                         />
                       </div>
-                      <span className="text-sm font-medium">
+                      <span className="text-sm font-semibold text-gray-900">
                         {(result.scores.neutralScore * 100).toFixed(1)}%
                       </span>
                     </div>
